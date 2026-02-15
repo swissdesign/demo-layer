@@ -1,5 +1,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
+import "./demoLayer.css";
+import { postCollector } from "./collector";
 import type { DemoLayerConfig } from "./types";
 
 type Locale = "de" | "en" | "fr" | "it";
@@ -293,6 +295,39 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   const [copied, setCopied] = React.useState(false);
   const [showSplash, setShowSplash] = React.useState(false);
   const animationMs = config.animationMs ?? 420;
+  const collectorEnabled = Boolean(config.collectorEnabled && config.collectorUrl);
+  const collectorTrackEvents =
+    collectorEnabled && config.collectorTrackEvents !== false;
+  const lastPhaseRef = React.useRef<Phase>(phase);
+
+  const postToCollector = React.useCallback(
+    (data: Record<string, string>) => {
+      if (!collectorEnabled || !config.collectorUrl) return;
+      const resolvedDemoUrl = demoUrl || (isBrowser ? window.location.href : "");
+      const payload: Record<string, string> = {
+        demoId: config.demoId,
+        projectName: config.projectName ?? config.demoId,
+        demoUrl: resolvedDemoUrl,
+        locale,
+        referrer: isBrowser ? document.referrer || "" : "",
+        userAgent: isBrowser ? window.navigator.userAgent || "" : "",
+        ...data,
+      };
+      if (config.collectorToken) {
+        payload.token = config.collectorToken;
+      }
+      postCollector(config.collectorUrl, payload);
+    },
+    [
+      collectorEnabled,
+      config.collectorToken,
+      config.collectorUrl,
+      config.demoId,
+      config.projectName,
+      demoUrl,
+      locale,
+    ],
+  );
 
   React.useEffect(() => {
     return () => {
@@ -402,6 +437,22 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   }, [state, config.enabled, phase]);
 
   React.useEffect(() => {
+    if (!collectorTrackEvents) {
+      lastPhaseRef.current = phase;
+      return;
+    }
+    if (phase === "open" && lastPhaseRef.current !== "open") {
+      postToCollector({
+        action: "event",
+        event: "open",
+        step,
+        phase,
+      });
+    }
+    lastPhaseRef.current = phase;
+  }, [collectorTrackEvents, phase, postToCollector, step]);
+
+  React.useEffect(() => {
     if (!config.enabled) return;
     if (!isBrowser) return;
 
@@ -481,6 +532,14 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       return;
     }
     if (phase === "closing" || phase === "closed") return;
+    if (collectorTrackEvents) {
+      postToCollector({
+        action: "event",
+        event: "close",
+        step,
+        phase,
+      });
+    }
     if (persistDismiss && isBrowser) {
       const ttlMs = config.dismissTtlDays * 24 * 60 * 60 * 1000;
       window.localStorage.setItem(dismissedKey, String(Date.now() + ttlMs));
@@ -547,11 +606,27 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
   const handleInterested = () => {
     if (handleLockedClick()) return;
+    if (collectorTrackEvents) {
+      postToCollector({
+        action: "event",
+        event: "click_interested",
+        step,
+        phase,
+      });
+    }
     setStep("intake");
   };
 
   const handleNotInterested = () => {
     if (handleLockedClick()) return;
+    if (collectorTrackEvents) {
+      postToCollector({
+        action: "event",
+        event: "click_not_interested",
+        step,
+        phase,
+      });
+    }
     setStep("notInterested");
   };
 
@@ -599,6 +674,14 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
     const projectName = config.projectName ?? config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
+    postToCollector({
+      action: "lead",
+      demoUrl: resolvedDemoUrl,
+      currentWebsite: intake.currentWebsite.trim(),
+      q1: intake.q1,
+      q2: intake.q2,
+      q3: intake.q3,
+    });
     const bodyLines = [
       `Project: ${projectName}`,
       `DemoId: ${config.demoId}`,
@@ -650,6 +733,13 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
     const projectName = config.projectName ?? config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
+    postToCollector({
+      action: "feedback",
+      demoUrl: resolvedDemoUrl,
+      reasonValue: notInterestedReason,
+      reasonLabel,
+      note: notInterestedNote,
+    });
 
     const subject = `[Demo: ${config.demoId}] Not interested`;
     const body = [

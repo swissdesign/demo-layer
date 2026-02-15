@@ -10,6 +10,9 @@ export type DemoLayerConfig = {
   handleWidthPx?: number;
   handleLineOpacity?: number;
   animationMs?: number;
+  collectorEnabled?: boolean;
+  collectorUrl?: string;
+  collectorTrackEvents?: boolean;
   studioName: string;
   contactEmail: string;
   schedulerUrl: string;
@@ -59,6 +62,10 @@ export const demoLayerConfig: DemoLayerConfig = {
   studioName: 'P. Heiniger Design',
   contactEmail: 'design@pascalheiniger.ch',
   schedulerUrl: 'https://calendar.app.google/6BZHBKDxmYpMikvb7',
+  collectorEnabled: true,
+  collectorUrl:
+    'https://script.google.com/macros/s/AKfycbzzyq1Z-FFBUfFXTPNwy_XYNcio80UfZE_ioBGjZ7p5KcTywpjS3lYzrgJ-2j_A69x_/exec',
+  collectorTrackEvents: true,
   openDelayMs: 5000,
   unlockAfterMs: 12000,
   unlockOnScrollPx: 120,

@@ -12,6 +12,10 @@ export type DemoLayerConfig = {
   schedulerUrl: string;
 
   transport?: DemoLayerTransport;
+  collectorEnabled?: boolean;
+  collectorUrl?: string;
+  collectorToken?: string;
+  collectorTrackEvents?: boolean;
 
   locales: Array<"de" | "en" | "fr" | "it">;
   defaultLocale: "de" | "en" | "fr" | "it";
