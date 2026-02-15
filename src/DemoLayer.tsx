@@ -797,12 +797,6 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
         data-phase={panelState}
         role="dialog"
         aria-modal="true"
-        onMouseDown={(event) => {
-          event.stopPropagation();
-        }}
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
       >
         {showSplash && (
           <div className="phd-demo-splash" aria-hidden="true">
