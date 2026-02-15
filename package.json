@@ -1,6 +1,6 @@
 {
   "name": "@pascalheiniger/demo-layer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React demo engagement layer with optional collector.",
   "type": "module",
   "main": "dist/index.cjs",
@@ -14,8 +14,14 @@
     },
     "./demoLayer.css": "./dist/demoLayer.css"
   },
-  "files": ["dist", "README.md", "LICENSE"],
-  "sideEffects": ["**/*.css"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
