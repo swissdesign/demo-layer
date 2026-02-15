@@ -1,7 +1,6 @@
-import React from 'react';
-import { createPortal } from 'react-dom';
-import './demoLayer.css';
-import type { DemoLayerConfig } from './demoLayer.config';
+import React from "react";
+import { createPortal } from "react-dom";
+import type { DemoLayerConfig } from "./types";
 
 type Locale = 'de' | 'en' | 'fr' | 'it';
 
@@ -967,5 +966,3 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
   return isBrowser ? createPortal(portalContent, document.body) : null;
 };
-
-export default DemoLayer;
