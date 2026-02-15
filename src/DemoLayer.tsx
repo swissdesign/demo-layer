@@ -1,12 +1,12 @@
-import React from 'react';
-import { createPortal } from 'react-dom';
-import type { DemoLayerConfig } from './types';
+import * as React from "react";
+import { createPortal } from "react-dom";
+import type { DemoLayerConfig } from "./types";
 
-type Locale = 'de' | 'en' | 'fr' | 'it';
+type Locale = "de" | "en" | "fr" | "it";
 
-type LayerState = 'hidden' | 'open' | 'minimized';
-type Step = 'main' | 'intake' | 'notInterested';
-type Phase = 'closed' | 'opening' | 'open' | 'closing';
+type LayerState = "hidden" | "open" | "minimized";
+type Step = "main" | "intake" | "notInterested";
+type Phase = "closed" | "opening" | "open" | "closing";
 
 type IntakeState = {
   currentWebsite: string;
@@ -23,147 +23,147 @@ type Props = {
 
 const COPY = {
   title: {
-    de: 'Demo-Version von P. Heiniger Design',
-    en: 'Demo version by P. Heiniger Design',
-    fr: 'Version démo par P. Heiniger Design',
-    it: 'Versione demo di P. Heiniger Design',
+    de: "Demo-Version von P. Heiniger Design",
+    en: "Demo version by P. Heiniger Design",
+    fr: "Version démo par P. Heiniger Design",
+    it: "Versione demo di P. Heiniger Design",
   },
   body: {
-    de: 'Ich habe diese kurze Demo gebaut, weil ich glaube, dass Ihr Betrieb mit einem modernen Webauftritt und smarten Abläufen (Anfragen, Buchungen, Infos) spürbar profitieren kann. Schauen Sie sich kurz um und geben Sie mir danach ein kurzes Feedback.',
-    en: 'I built this short demo because I believe your business could gain real value from a modern website and smarter workflows (inquiries, bookings, information). Have a quick look around, then share brief feedback.',
+    de: "Ich habe diese kurze Demo gebaut, weil ich glaube, dass Ihr Betrieb mit einem modernen Webauftritt und smarten Abläufen (Anfragen, Buchungen, Infos) spürbar profitieren kann. Schauen Sie sich kurz um und geben Sie mir danach ein kurzes Feedback.",
+    en: "I built this short demo because I believe your business could gain real value from a modern website and smarter workflows (inquiries, bookings, information). Have a quick look around, then share brief feedback.",
     fr: "J'ai créé cette courte démo car je pense que votre entreprise peut gagner en valeur avec un site moderne et des flux plus intelligents (demandes, réservations, informations). Parcourez-la brièvement, puis laissez un feedback.",
-    it: 'Ho creato questa breve demo perché penso che la Sua attività possa ottenere più valore con un sito moderno e flussi più intelligenti (richieste, prenotazioni, informazioni). Dia un\'occhiata e poi lasci un feedback breve.',
+    it: "Ho creato questa breve demo perché penso che la Sua attività possa ottenere più valore con un sito moderno e flussi più intelligenti (richieste, prenotazioni, informazioni). Dia un'occhiata e poi lasci un feedback breve.",
   },
   interested: {
-    de: 'Interessant',
-    en: 'Interested',
-    fr: 'Intéressant',
-    it: 'Interessante',
+    de: "Interessant",
+    en: "Interested",
+    fr: "Intéressant",
+    it: "Interessante",
   },
   notInterested: {
-    de: 'Nicht interessant',
-    en: 'Not interested',
-    fr: 'Pas intéressé',
-    it: 'Non mi interessa',
+    de: "Nicht interessant",
+    en: "Not interested",
+    fr: "Pas intéressé",
+    it: "Non mi interessa",
   },
   closeToBar: {
-    de: 'Meine Demo ansehen',
-    en: 'View my custom demo site',
-    fr: 'Voir ma démo',
-    it: 'Vedi la mia demo',
+    de: "Meine Demo ansehen",
+    en: "View my custom demo site",
+    fr: "Voir ma démo",
+    it: "Vedi la mia demo",
   },
   tooltip: {
-    de: 'Bitte schauen Sie sich die Seite zuerst an, bevor Sie entscheiden.',
-    en: 'Please look at the site first before deciding.',
-    fr: 'Regardez d\'abord le site avant de décider.',
-    it: 'Guardi prima il sito, poi decida.',
+    de: "Bitte schauen Sie sich die Seite zuerst an, bevor Sie entscheiden.",
+    en: "Please look at the site first before deciding.",
+    fr: "Regardez d'abord le site avant de décider.",
+    it: "Guardi prima il sito, poi decida.",
   },
   intakeIntro: {
-    de: 'Wenn Sie offen sind, helfen mir drei kurze Fragen, den Call effizient zu machen:',
-    en: 'If you\'re open to it, these three quick questions help make the call efficient:',
-    fr: 'Si vous êtes d\'accord, trois questions rapides rendent l\'appel plus efficace :',
-    it: 'Se è d\'accordo, tre domande rapide rendono la call più efficace:',
+    de: "Wenn Sie offen sind, helfen mir drei kurze Fragen, den Call effizient zu machen:",
+    en: "If you're open to it, these three quick questions help make the call efficient:",
+    fr: "Si vous êtes d'accord, trois questions rapides rendent l'appel plus efficace :",
+    it: "Se è d'accordo, tre domande rapide rendono la call più efficace:",
   },
   demoLinkLabel: {
-    de: 'Demo-Link (automatisch)',
-    en: 'Demo link (auto)',
-    fr: 'Lien de la démo (auto)',
-    it: 'Link della demo (auto)',
+    de: "Demo-Link (automatisch)",
+    en: "Demo link (auto)",
+    fr: "Lien de la démo (auto)",
+    it: "Link della demo (auto)",
   },
   copy: {
-    de: 'Kopieren',
-    en: 'Copy',
-    fr: 'Copier',
-    it: 'Copia',
+    de: "Kopieren",
+    en: "Copy",
+    fr: "Copier",
+    it: "Copia",
   },
   copied: {
-    de: 'Kopiert',
-    en: 'Copied',
-    fr: 'Copié',
-    it: 'Copiato',
+    de: "Kopiert",
+    en: "Copied",
+    fr: "Copié",
+    it: "Copiato",
   },
   currentWebsiteLabel: {
-    de: 'Ihre aktuelle Website (optional)',
-    en: 'Your current website (optional)',
-    fr: 'Votre site actuel (optionnel)',
-    it: 'Il tuo sito attuale (opzionale)',
+    de: "Ihre aktuelle Website (optional)",
+    en: "Your current website (optional)",
+    fr: "Votre site actuel (optionnel)",
+    it: "Il tuo sito attuale (opzionale)",
   },
   q1: {
-    de: '1) Was ist aktuell der grösste Engpass an Ihrem Online-Auftritt? (z.B. Sichtbarkeit, Vertrauen, Anfragen, Buchungen, Infos)',
-    en: '1) What\'s the biggest bottleneck in your online presence right now? (visibility, trust, inquiries, bookings, info)',
-    fr: '1) Quel est le plus gros frein de votre présence en ligne aujourd\'hui ? (visibilité, confiance, demandes, réservations, infos)',
-    it: '1) Qual è il principale ostacolo della Sua presenza online oggi? (visibilità, fiducia, richieste, prenotazioni, info)',
+    de: "1) Was ist aktuell der grösste Engpass an Ihrem Online-Auftritt? (z.B. Sichtbarkeit, Vertrauen, Anfragen, Buchungen, Infos)",
+    en: "1) What's the biggest bottleneck in your online presence right now? (visibility, trust, inquiries, bookings, info)",
+    fr: "1) Quel est le plus gros frein de votre présence en ligne aujourd'hui ? (visibilité, confiance, demandes, réservations, infos)",
+    it: "1) Qual è il principale ostacolo della Sua presenza online oggi? (visibilità, fiducia, richieste, prenotazioni, info)",
   },
   q2: {
-    de: '2) Wenn Ihre Website in 30 Tagen perfekt funktionieren würde: Was müsste sie konkret für Ihr Tagesgeschäft vereinfachen oder automatisieren?',
-    en: '2) If your website worked perfectly in 30 days: what should it simplify or automate in your day-to-day operations?',
-    fr: '2) Si votre site fonctionnait parfaitement dans 30 jours : que devrait-il simplifier ou automatiser au quotidien ?',
-    it: '2) Se il sito funzionasse perfettamente tra 30 giorni: cosa dovrebbe semplificare o automatizzare nel lavoro quotidiano?',
+    de: "2) Wenn Ihre Website in 30 Tagen perfekt funktionieren würde: Was müsste sie konkret für Ihr Tagesgeschäft vereinfachen oder automatisieren?",
+    en: "2) If your website worked perfectly in 30 days: what should it simplify or automate in your day-to-day operations?",
+    fr: "2) Si votre site fonctionnait parfaitement dans 30 jours : que devrait-il simplifier ou automatiser au quotidien ?",
+    it: "2) Se il sito funzionasse perfettamente tra 30 giorni: cosa dovrebbe semplificare o automatizzare nel lavoro quotidiano?",
   },
   q3: {
-    de: '3) Woran würden Sie den Erfolg messen? Nennen Sie 1–2 Ziele (z.B. mehr Anfragen/Woche, höhere Buchungsrate, weniger Telefonzeit).',
-    en: '3) How would you measure success? Name 1–2 targets (more inquiries/week, higher booking rate, less phone time).',
-    fr: '3) Comment mesureriez-vous le succès ? Donnez 1–2 objectifs (plus de demandes/semaine, meilleur taux de réservation, moins d\'appels).',
-    it: '3) Come misurerebbe il successo? Indichi 1–2 obiettivi (più richieste/settimana, migliore tasso di prenotazione, meno telefonate).',
+    de: "3) Woran würden Sie den Erfolg messen? Nennen Sie 1–2 Ziele (z.B. mehr Anfragen/Woche, höhere Buchungsrate, weniger Telefonzeit).",
+    en: "3) How would you measure success? Name 1–2 targets (more inquiries/week, higher booking rate, less phone time).",
+    fr: "3) Comment mesureriez-vous le succès ? Donnez 1–2 objectifs (plus de demandes/semaine, meilleur taux de réservation, moins d'appels).",
+    it: "3) Come misurerebbe il successo? Indichi 1–2 obiettivi (più richieste/settimana, migliore tasso di prenotazione, meno telefonate).",
   },
   sendBook: {
-    de: 'Senden & Termin buchen',
-    en: 'Send & book a slot',
-    fr: 'Envoyer & réserver',
-    it: 'Invia & prenota',
+    de: "Senden & Termin buchen",
+    en: "Send & book a slot",
+    fr: "Envoyer & réserver",
+    it: "Invia & prenota",
   },
   skipBook: {
-    de: 'Überspringen & buchen',
-    en: 'Skip & book',
-    fr: 'Passer & réserver',
-    it: 'Salta & prenota',
+    de: "Überspringen & buchen",
+    en: "Skip & book",
+    fr: "Passer & réserver",
+    it: "Salta & prenota",
   },
   back: {
-    de: 'Zurück',
-    en: 'Back',
-    fr: 'Retour',
-    it: 'Indietro',
+    de: "Zurück",
+    en: "Back",
+    fr: "Retour",
+    it: "Indietro",
   },
   helper: {
-    de: 'Falls Ihr Mail-Client nicht öffnet, schreiben Sie an design@pascalheiniger.ch.',
-    en: 'If your mail client did not open, email design@pascalheiniger.ch.',
-    fr: 'Si votre client mail ne s\'ouvre pas, écrivez à design@pascalheiniger.ch.',
-    it: 'Se il client mail non si apre, scriva a design@pascalheiniger.ch.',
+    de: "Falls Ihr Mail-Client nicht öffnet, schreiben Sie an design@pascalheiniger.ch.",
+    en: "If your mail client did not open, email design@pascalheiniger.ch.",
+    fr: "Si votre client mail ne s'ouvre pas, écrivez à design@pascalheiniger.ch.",
+    it: "Se il client mail non si apre, scriva a design@pascalheiniger.ch.",
   },
   reasonLabel: {
-    de: 'Grund',
-    en: 'Reason',
-    fr: 'Raison',
-    it: 'Motivo',
+    de: "Grund",
+    en: "Reason",
+    fr: "Raison",
+    it: "Motivo",
   },
   reasonPlaceholder: {
-    de: 'Bitte auswählen',
-    en: 'Select a reason',
-    fr: 'Choisir une raison',
-    it: 'Seleziona un motivo',
+    de: "Bitte auswählen",
+    en: "Select a reason",
+    fr: "Choisir une raison",
+    it: "Seleziona un motivo",
   },
   contextLabel: {
-    de: 'Optional: kurzer Kontext',
-    en: 'Optional: context',
-    fr: 'Optionnel : contexte',
-    it: 'Opzionale: contesto',
+    de: "Optional: kurzer Kontext",
+    en: "Optional: context",
+    fr: "Optionnel : contexte",
+    it: "Opzionale: contesto",
   },
   submit: {
-    de: 'Senden',
-    en: 'Submit',
-    fr: 'Envoyer',
-    it: 'Invia',
+    de: "Senden",
+    en: "Submit",
+    fr: "Envoyer",
+    it: "Invia",
   },
 };
 
 const LOCALE_LABELS: Record<Locale, string> = {
-  de: 'DE',
-  en: 'EN',
-  fr: 'FR',
-  it: 'IT',
+  de: "DE",
+  en: "EN",
+  fr: "FR",
+  it: "IT",
 };
 
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== "undefined";
 const PHDLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     className={className}
@@ -180,17 +180,20 @@ const PHDLogo: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const getInitialLocale = (config: DemoLayerConfig, localeKey: string): Locale => {
+const getInitialLocale = (
+  config: DemoLayerConfig,
+  localeKey: string,
+): Locale => {
   if (isBrowser) {
     const stored = window.localStorage.getItem(localeKey);
     if (stored && config.locales.includes(stored as Locale)) {
       return stored as Locale;
     }
-    const lang = window.navigator.language?.toLowerCase() ?? '';
-    if (lang.startsWith('de')) return 'de';
-    if (lang.startsWith('fr')) return 'fr';
-    if (lang.startsWith('it')) return 'it';
-    return 'en';
+    const lang = window.navigator.language?.toLowerCase() ?? "";
+    if (lang.startsWith("de")) return "de";
+    if (lang.startsWith("fr")) return "fr";
+    if (lang.startsWith("it")) return "it";
+    return "en";
   }
   return config.defaultLocale as Locale;
 };
@@ -202,31 +205,45 @@ const getSafeLocale = (config: DemoLayerConfig, locale: string): Locale => {
 
 const readIntake = (
   intakeKey: string,
-  currentWebsitePrefill?: string
+  currentWebsitePrefill?: string,
 ): IntakeState => {
   if (!isBrowser) {
-    return { currentWebsite: currentWebsitePrefill ?? '', q1: '', q2: '', q3: '' };
+    return {
+      currentWebsite: currentWebsitePrefill ?? "",
+      q1: "",
+      q2: "",
+      q3: "",
+    };
   }
   const stored = window.localStorage.getItem(intakeKey);
   if (!stored) {
-    return { currentWebsite: currentWebsitePrefill ?? '', q1: '', q2: '', q3: '' };
+    return {
+      currentWebsite: currentWebsitePrefill ?? "",
+      q1: "",
+      q2: "",
+      q3: "",
+    };
   }
   try {
     const parsed = JSON.parse(stored) as IntakeState & {
       websiteLink?: string;
     };
-    const migratedWebsite =
-      parsed.currentWebsite ?? parsed.websiteLink ?? '';
+    const migratedWebsite = parsed.currentWebsite ?? parsed.websiteLink ?? "";
     return {
       currentWebsite: migratedWebsite,
-      q1: parsed.q1 ?? '',
-      q2: parsed.q2 ?? '',
-      q3: parsed.q3 ?? '',
+      q1: parsed.q1 ?? "",
+      q2: parsed.q2 ?? "",
+      q3: parsed.q3 ?? "",
       lastUpdated: parsed.lastUpdated,
       locale: parsed.locale,
     };
   } catch {
-    return { currentWebsite: currentWebsitePrefill ?? '', q1: '', q2: '', q3: '' };
+    return {
+      currentWebsite: currentWebsitePrefill ?? "",
+      q1: "",
+      q2: "",
+      q3: "",
+    };
   }
 };
 
@@ -241,25 +258,25 @@ const readDismissedUntil = (dismissedKey: string): number => {
 export const DemoLayer: React.FC<Props> = ({ config }) => {
   const localeKey = React.useMemo(
     () => `phd_demo_locale_v1:${config.demoId}`,
-    [config.demoId]
+    [config.demoId],
   );
   const intakeKey = React.useMemo(
     () => `phd_demo_intake_v1:${config.demoId}`,
-    [config.demoId]
+    [config.demoId],
   );
-  const dismissedKey = 'dismissed_until';
+  const dismissedKey = "dismissed_until";
 
-  const [state, setState] = React.useState<LayerState>('hidden');
-  const [step, setStep] = React.useState<Step>('main');
+  const [state, setState] = React.useState<LayerState>("hidden");
+  const [step, setStep] = React.useState<Step>("main");
   const [locale, setLocale] = React.useState<Locale>(
-    getInitialLocale(config, localeKey)
+    getInitialLocale(config, localeKey),
   );
   const [isUnlocked, setIsUnlocked] = React.useState(false);
   const [showTooltip, setShowTooltip] = React.useState(false);
-  const [notInterestedReason, setNotInterestedReason] = React.useState('');
-  const [notInterestedNote, setNotInterestedNote] = React.useState('');
+  const [notInterestedReason, setNotInterestedReason] = React.useState("");
+  const [notInterestedNote, setNotInterestedNote] = React.useState("");
   const [intake, setIntake] = React.useState<IntakeState>(
-    readIntake(intakeKey, config.currentWebsitePrefill)
+    readIntake(intakeKey, config.currentWebsitePrefill),
   );
   const [showMailHelper, setShowMailHelper] = React.useState(false);
   const tooltipTimeoutRef = React.useRef<number | null>(null);
@@ -271,8 +288,8 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   const autoOpenTimeoutRef = React.useRef<number | null>(null);
   const suppressOpenUntilRef = React.useRef(0);
   const [mounted, setMounted] = React.useState(false);
-  const [phase, setPhase] = React.useState<Phase>('closed');
-  const [demoUrl, setDemoUrl] = React.useState('');
+  const [phase, setPhase] = React.useState<Phase>("closed");
+  const [demoUrl, setDemoUrl] = React.useState("");
   const [copied, setCopied] = React.useState(false);
   const [showSplash, setShowSplash] = React.useState(false);
   const animationMs = config.animationMs ?? 420;
@@ -315,11 +332,11 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
     const dismissedUntil = readDismissedUntil(dismissedKey);
     if (dismissedUntil > Date.now()) {
-      setState('minimized');
+      setState("minimized");
       return;
     }
 
-    if (state !== 'hidden' || mounted || phase !== 'closed') {
+    if (state !== "hidden" || mounted || phase !== "closed") {
       return;
     }
 
@@ -328,8 +345,8 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     }
 
     autoOpenTimeoutRef.current = window.setTimeout(() => {
-      if (phase !== 'closed' || mounted) return;
-      setState('open');
+      if (phase !== "closed" || mounted) return;
+      setState("open");
     }, config.openDelayMs);
 
     return () => {
@@ -339,12 +356,11 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     };
   }, [config.enabled, config.openDelayMs, dismissedKey, state, mounted, phase]);
 
-
   React.useEffect(() => {
     if (!config.enabled) return;
     if (!isBrowser) return;
 
-    if (state !== 'open' || config.splashEnabled === false) {
+    if (state !== "open" || config.splashEnabled === false) {
       setShowSplash(false);
       return;
     }
@@ -369,17 +385,17 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     if (!config.enabled) return;
     if (!isBrowser) return;
 
-    if (state === 'open') {
-      if (phase === 'open' || phase === 'opening' || phase === 'closing') {
+    if (state === "open") {
+      if (phase === "open" || phase === "opening" || phase === "closing") {
         return;
       }
       setMounted(true);
-      setPhase('opening');
+      setPhase("opening");
       if (openRafRef.current) {
         window.cancelAnimationFrame(openRafRef.current);
       }
       openRafRef.current = window.requestAnimationFrame(() => {
-        setPhase('open');
+        setPhase("open");
         openRafRef.current = null;
       });
     }
@@ -411,12 +427,12 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     if (!config.enabled) return;
     if (!isBrowser) return;
 
-    if (state !== 'open') return;
+    if (state !== "open") return;
 
-    setStep('main');
+    setStep("main");
     setShowMailHelper(false);
-    setNotInterestedReason('');
-    setNotInterestedNote('');
+    setNotInterestedReason("");
+    setNotInterestedNote("");
     setIsUnlocked(false);
 
     const unlockByTime = window.setTimeout(() => {
@@ -430,19 +446,19 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        startClose('esc');
+      if (event.key === "Escape") {
+        startClose("esc");
       }
     };
 
     handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.clearTimeout(unlockByTime);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [state, config.unlockAfterMs, config.unlockOnScrollPx, config.enabled]);
 
@@ -451,26 +467,23 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       window.clearTimeout(closeTimeoutRef.current);
     }
     setMounted(false);
-    setPhase('closed');
-    setState('minimized');
-    setStep('main');
+    setPhase("closed");
+    setState("minimized");
+    setStep("main");
     setShowMailHelper(false);
   }, []);
 
   const startClose = (reason: string, persistDismiss = true) => {
-    console.debug('[DemoLayer] close', { reason, phaseBefore: phase });
+    console.debug("[DemoLayer] close", { reason, phaseBefore: phase });
     if (!mounted) {
-      setPhase('closed');
-      setState('minimized');
+      setPhase("closed");
+      setState("minimized");
       return;
     }
-    if (phase === 'closing' || phase === 'closed') return;
+    if (phase === "closing" || phase === "closed") return;
     if (persistDismiss && isBrowser) {
       const ttlMs = config.dismissTtlDays * 24 * 60 * 60 * 1000;
-      window.localStorage.setItem(
-        dismissedKey,
-        String(Date.now() + ttlMs)
-      );
+      window.localStorage.setItem(dismissedKey, String(Date.now() + ttlMs));
     }
 
     suppressOpenUntilRef.current = Date.now() + animationMs + 80;
@@ -482,9 +495,9 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       window.clearTimeout(autoOpenTimeoutRef.current);
       autoOpenTimeoutRef.current = null;
     }
-    setPhase('closing');
-    setState('minimized');
-    setStep('main');
+    setPhase("closing");
+    setState("minimized");
+    setStep("main");
     setShowSplash(false);
     if (closeTimeoutRef.current) {
       window.clearTimeout(closeTimeoutRef.current);
@@ -495,8 +508,8 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   };
 
   const open = () => {
-    if (phase === 'closing') return;
-    if (phase === 'open' || phase === 'opening') return;
+    if (phase === "closing") return;
+    if (phase === "open" || phase === "opening") return;
     if (closeTimeoutRef.current) {
       window.clearTimeout(closeTimeoutRef.current);
     }
@@ -505,10 +518,10 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       openRafRef.current = null;
     }
     setMounted(true);
-    setPhase('opening');
-    setState('open');
+    setPhase("opening");
+    setState("open");
     openRafRef.current = window.requestAnimationFrame(() => {
-      setPhase('open');
+      setPhase("open");
       openRafRef.current = null;
     });
   };
@@ -534,16 +547,16 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
   const handleInterested = () => {
     if (handleLockedClick()) return;
-    setStep('intake');
+    setStep("intake");
   };
 
   const handleNotInterested = () => {
     if (handleLockedClick()) return;
-    setStep('notInterested');
+    setStep("notInterested");
   };
 
   const handleBackToMain = () => {
-    setStep('main');
+    setStep("main");
     setShowMailHelper(false);
   };
 
@@ -554,13 +567,13 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       if (window.navigator.clipboard?.writeText) {
         await window.navigator.clipboard.writeText(demoUrl);
       } else {
-        const textarea = document.createElement('textarea');
+        const textarea = document.createElement("textarea");
         textarea.value = demoUrl;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
         document.body.appendChild(textarea);
         textarea.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(textarea);
       }
       setCopied(true);
@@ -582,7 +595,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   const handleSendAndBook = () => {
     if (!isBrowser) return;
 
-    window.open(config.schedulerUrl, '_blank', 'noopener,noreferrer');
+    window.open(config.schedulerUrl, "_blank", "noopener,noreferrer");
 
     const projectName = config.projectName ?? config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
@@ -597,18 +610,18 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     }
 
     bodyLines.push(
-      `Q1: ${intake.q1 || '-'}`,
-      `Q2: ${intake.q2 || '-'}`,
-      `Q3: ${intake.q3 || '-'}`,
+      `Q1: ${intake.q1 || "-"}`,
+      `Q2: ${intake.q2 || "-"}`,
+      `Q3: ${intake.q3 || "-"}`,
       `Locale: ${locale}`,
-      `Time: ${new Date().toISOString()}`
+      `Time: ${new Date().toISOString()}`,
     );
 
     const subject = `[Demo: ${config.demoId}] Interested — Web intake`;
-    const body = bodyLines.join('\n');
+    const body = bodyLines.join("\n");
 
     const mailto = `mailto:${config.contactEmail}?subject=${encodeURIComponent(
-      subject
+      subject,
     )}&body=${encodeURIComponent(body)}`;
 
     window.location.href = mailto;
@@ -623,14 +636,16 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
   const handleSkipAndBook = () => {
     if (!isBrowser) return;
-    window.open(config.schedulerUrl, '_blank', 'noopener,noreferrer');
+    window.open(config.schedulerUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleNotInterestedSubmit = () => {
     if (!isBrowser) return;
     if (!notInterestedReason) return;
 
-    const reason = config.reasons.find((item) => item.value === notInterestedReason);
+    const reason = config.reasons.find(
+      (item) => item.value === notInterestedReason,
+    );
     const reasonLabel = reason ? reason.labels[locale] : notInterestedReason;
 
     const projectName = config.projectName ?? config.demoId;
@@ -642,17 +657,17 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       `DemoId: ${config.demoId}`,
       `Demo URL: ${resolvedDemoUrl}`,
       `Reason: ${notInterestedReason} (${reasonLabel})`,
-      `Context: ${notInterestedNote || '-'}`,
+      `Context: ${notInterestedNote || "-"}`,
       `Locale: ${locale}`,
       `Time: ${new Date().toISOString()}`,
-    ].join('\n');
+    ].join("\n");
 
     const mailto = `mailto:${config.contactEmail}?subject=${encodeURIComponent(
-      subject
+      subject,
     )}&body=${encodeURIComponent(body)}`;
 
     window.location.href = mailto;
-    startClose('not-interested');
+    startClose("not-interested");
   };
 
   if (!config.enabled) return null;
@@ -662,15 +677,16 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   };
 
   const isLocked = !isUnlocked;
-  const canSendIntake = intake.q1.trim().length > 0 && intake.q2.trim().length > 0;
+  const canSendIntake =
+    intake.q1.trim().length > 0 && intake.q2.trim().length > 0;
   const layerStyle = {
-    ['--phd-accent' as string]: config.theme.accent,
-    ['--phd-panel-bg' as string]: config.theme.panelBg,
-    ['--phd-handle-height' as string]: `${config.handleHeightPx ?? 76}px`,
-    ['--phd-handle-width' as string]: `${config.handleWidthPx ?? 38}px`,
-    ['--phd-handle-line-opacity' as string]: `${config.handleLineOpacity ?? 0.65}`,
-    ['--phd-splash-ms' as string]: `${config.splashMs ?? 900}ms`,
-    ['--phd-animation-ms' as string]: `${animationMs}ms`,
+    ["--phd-accent" as string]: config.theme.accent,
+    ["--phd-panel-bg" as string]: config.theme.panelBg,
+    ["--phd-handle-height" as string]: `${config.handleHeightPx ?? 76}px`,
+    ["--phd-handle-width" as string]: `${config.handleWidthPx ?? 38}px`,
+    ["--phd-handle-line-opacity" as string]: `${config.handleLineOpacity ?? 0.65}`,
+    ["--phd-splash-ms" as string]: `${config.splashMs ?? 900}ms`,
+    ["--phd-animation-ms" as string]: `${animationMs}ms`,
   };
 
   const panelState = phase;
@@ -683,7 +699,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
         data-phase={overlayState}
         onClick={(event) => {
           if (event.target !== event.currentTarget) return;
-          startClose('overlay');
+          startClose("overlay");
         }}
       />
       <div
@@ -701,28 +717,25 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
         }}
       >
         {showSplash && (
-          <div
-            className="phd-demo-splash"
-            aria-hidden="true"
-          >
+          <div className="phd-demo-splash" aria-hidden="true">
             <div className="phd-demo-splash-inner">
               <PHDLogo className="phd-logo phd-logo-splash" />
             </div>
           </div>
         )}
-        <div className={`phd-demo-content ${showSplash ? 'is-splashing' : ''}`}>
+        <div className={`phd-demo-content ${showSplash ? "is-splashing" : ""}`}>
           <div className="phd-demo-brand">
             <PHDLogo className="phd-logo phd-logo-brand" />
             <div className="phd-demo-brand-text">P. HEINIGER DESIGN</div>
           </div>
           <div className="phd-demo-header">
-            <h2 className="phd-demo-title">{t('title')}</h2>
+            <h2 className="phd-demo-title">{t("title")}</h2>
             <div className="phd-demo-locale-toggle" aria-label="Locale">
               {config.locales.map((loc) => (
                 <button
                   key={loc}
                   type="button"
-                  className={loc === locale ? 'is-active' : undefined}
+                  className={loc === locale ? "is-active" : undefined}
                   onClick={() => handleLocaleChange(loc)}
                 >
                   {LOCALE_LABELS[loc]}
@@ -731,9 +744,9 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
             </div>
           </div>
 
-          {step === 'main' && (
+          {step === "main" && (
             <>
-              <p className="phd-demo-body">{t('body')}</p>
+              <p className="phd-demo-body">{t("body")}</p>
               <div className="phd-demo-actions">
                 <button
                   type="button"
@@ -741,7 +754,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   data-locked={isLocked}
                   onClick={handleInterested}
                 >
-                  {t('interested')}
+                  {t("interested")}
                 </button>
                 <button
                   type="button"
@@ -749,7 +762,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   data-locked={isLocked}
                   onClick={handleNotInterested}
                 >
-                  {t('notInterested')}
+                  {t("notInterested")}
                 </button>
                 <button
                   type="button"
@@ -761,38 +774,42 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
-                    startClose('view-site');
+                    startClose("view-site");
                   }}
                 >
-                  {t('closeToBar')}
+                  {t("closeToBar")}
                 </button>
-                <div className={`phd-demo-tooltip ${showTooltip ? 'is-visible' : ''}`}>
-                  {t('tooltip')}
+                <div
+                  className={`phd-demo-tooltip ${showTooltip ? "is-visible" : ""}`}
+                >
+                  {t("tooltip")}
                 </div>
               </div>
             </>
           )}
 
-          {step === 'intake' && (
+          {step === "intake" && (
             <>
-              <p className="phd-demo-body">{t('intakeIntro')}</p>
+              <p className="phd-demo-body">{t("intakeIntro")}</p>
               <div className="phd-demo-section">
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-demo-link">{t('demoLinkLabel')}</label>
+                  <label htmlFor="phd-demo-link">{t("demoLinkLabel")}</label>
                   <div id="phd-demo-link" className="phd-demo-demo-row">
-                    <span className="phd-demo-demo-url">{demoUrl || '-'}</span>
+                    <span className="phd-demo-demo-url">{demoUrl || "-"}</span>
                     <button
                       type="button"
                       className="phd-demo-btn tiny"
                       onClick={handleCopyDemoUrl}
                       disabled={!demoUrl}
                     >
-                      {copied ? t('copied') : t('copy')}
+                      {copied ? t("copied") : t("copy")}
                     </button>
                   </div>
                 </div>
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-current-website">{t('currentWebsiteLabel')}</label>
+                  <label htmlFor="phd-current-website">
+                    {t("currentWebsiteLabel")}
+                  </label>
                   <input
                     id="phd-current-website"
                     type="url"
@@ -807,7 +824,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   />
                 </div>
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-q1">{t('q1')}</label>
+                  <label htmlFor="phd-q1">{t("q1")}</label>
                   <textarea
                     id="phd-q1"
                     value={intake.q1}
@@ -820,7 +837,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   />
                 </div>
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-q2">{t('q2')}</label>
+                  <label htmlFor="phd-q2">{t("q2")}</label>
                   <textarea
                     id="phd-q2"
                     value={intake.q2}
@@ -833,7 +850,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   />
                 </div>
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-q3">{t('q3')}</label>
+                  <label htmlFor="phd-q3">{t("q3")}</label>
                   <textarea
                     id="phd-q3"
                     value={intake.q3}
@@ -854,38 +871,42 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   data-locked={!canSendIntake}
                   disabled={!canSendIntake}
                 >
-                  {t('sendBook')}
+                  {t("sendBook")}
                 </button>
                 <button
                   type="button"
                   className="phd-demo-btn secondary"
                   onClick={handleSkipAndBook}
                 >
-                  {t('skipBook')}
+                  {t("skipBook")}
                 </button>
                 <button
                   type="button"
                   className="phd-demo-btn ghost"
                   onClick={handleBackToMain}
                 >
-                  {t('back')}
+                  {t("back")}
                 </button>
               </div>
-              {showMailHelper && <div className="phd-demo-helper">{t('helper')}</div>}
+              {showMailHelper && (
+                <div className="phd-demo-helper">{t("helper")}</div>
+              )}
             </>
           )}
 
-          {step === 'notInterested' && (
+          {step === "notInterested" && (
             <>
               <div className="phd-demo-section">
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-reason">{t('reasonLabel')}</label>
+                  <label htmlFor="phd-reason">{t("reasonLabel")}</label>
                   <select
                     id="phd-reason"
                     value={notInterestedReason}
-                    onChange={(event) => setNotInterestedReason(event.target.value)}
+                    onChange={(event) =>
+                      setNotInterestedReason(event.target.value)
+                    }
                   >
-                    <option value="">{t('reasonPlaceholder')}</option>
+                    <option value="">{t("reasonPlaceholder")}</option>
                     {config.reasons.map((reason) => (
                       <option key={reason.value} value={reason.value}>
                         {reason.labels[locale]}
@@ -894,11 +915,13 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   </select>
                 </div>
                 <div className="phd-demo-field">
-                  <label htmlFor="phd-context">{t('contextLabel')}</label>
+                  <label htmlFor="phd-context">{t("contextLabel")}</label>
                   <textarea
                     id="phd-context"
                     value={notInterestedNote}
-                    onChange={(event) => setNotInterestedNote(event.target.value)}
+                    onChange={(event) =>
+                      setNotInterestedNote(event.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -910,14 +933,14 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                   data-locked={!notInterestedReason}
                   disabled={!notInterestedReason}
                 >
-                  {t('submit')}
+                  {t("submit")}
                 </button>
                 <button
                   type="button"
                   className="phd-demo-btn ghost"
                   onClick={handleBackToMain}
                 >
-                  {t('back')}
+                  {t("back")}
                 </button>
               </div>
             </>
@@ -937,7 +960,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
         open();
       }}
       onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           if (isBlockingHandle) return;
           if (Date.now() < suppressOpenUntilRef.current) return;
@@ -947,7 +970,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       role="button"
       tabIndex={0}
       aria-label="Open demo engagement layer"
-      style={{ pointerEvents: isBlockingHandle ? 'none' : 'auto' }}
+      style={{ pointerEvents: isBlockingHandle ? "none" : "auto" }}
     >
       <div className="phd-handle">
         <PHDLogo className="phd-logo phd-handle__logo" />
