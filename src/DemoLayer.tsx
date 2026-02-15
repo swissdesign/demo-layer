@@ -1,6 +1,6 @@
-import React from "react";
-import { createPortal } from "react-dom";
-import type { DemoLayerConfig } from "./types";
+import React from 'react';
+import { createPortal } from 'react-dom';
+import type { DemoLayerConfig } from './types';
 
 type Locale = 'de' | 'en' | 'fr' | 'it';
 
