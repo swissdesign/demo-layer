@@ -798,11 +798,9 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
         role="dialog"
         aria-modal="true"
         onMouseDown={(event) => {
-          event.preventDefault();
           event.stopPropagation();
         }}
         onClick={(event) => {
-          event.preventDefault();
           event.stopPropagation();
         }}
       >
