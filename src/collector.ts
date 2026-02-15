@@ -10,7 +10,7 @@ export function postCollector(
     ) {
       const form = new FormData();
       for (const [key, value] of Object.entries(payload)) {
-        form.append(key, value);
+        form.append(key, String(value));
       }
       navigator.sendBeacon(url, form);
       return;
@@ -19,7 +19,7 @@ export function postCollector(
     if (typeof fetch !== "undefined") {
       const body = new URLSearchParams();
       for (const [key, value] of Object.entries(payload)) {
-        body.append(key, value);
+        body.append(key, String(value));
       }
       fetch(url, {
         method: "POST",
