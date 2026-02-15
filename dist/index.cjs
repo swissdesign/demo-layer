@@ -829,13 +829,7 @@ var DemoLayer = ({ config }) => {
                   {
                     type: "button",
                     className: "phd-demo-btn ghost",
-                    onMouseDown: (event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                    },
-                    onClick: (event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
+                    onClick: () => {
                       startClose("view-site");
                     },
                     children: t("closeToBar")

@@ -849,13 +849,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                 <button
                   type="button"
                   className="phd-demo-btn ghost"
-                  onMouseDown={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                  }}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
+                  onClick={() => {
                     startClose("view-site");
                   }}
                 >
