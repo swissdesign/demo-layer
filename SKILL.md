@@ -10,7 +10,7 @@ Your task is to integrate the proprietary `@pascalheiniger/demo-layer` into the 
 
 ## STEP 1: Add Dependency
 Modify `package.json`. Add the following to the `dependencies` object:
-`"@pascalheiniger/demo-layer": "github:swissdesign/demo-layer#v0.1.3"`
+`"@pascalheiniger/demo-layer": "github:swissdesign/demo-layer#v0.1.4"`
 Do not remove any existing dependencies. 
 
 ## STEP 2: Create the Configuration File
