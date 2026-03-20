@@ -7,7 +7,7 @@ import type { DemoLayerConfig } from "./types";
 type Locale = "de" | "en" | "fr" | "it";
 
 type LayerState = "hidden" | "open" | "minimized";
-type Step = "main" | "intake" | "notInterested";
+type Step = "main" | "intake" | "notInterested" | "thanks";
 type Phase = "closed" | "opening" | "open" | "closing";
 
 type IntakeState = {
@@ -156,6 +156,12 @@ const COPY = {
     fr: "Envoyer",
     it: "Invia",
   },
+  thanks: {
+    de: "Danke — ich melde mich in Kürze bei Ihnen.",
+    en: "Thanks — I'll be in touch soon.",
+    fr: "Merci — je vous recontacte bientôt.",
+    it: "Grazie — la ricontatto presto.",
+  },
 };
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -293,6 +299,7 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   const [phase, setPhase] = React.useState<Phase>("closed");
   const [demoUrl, setDemoUrl] = React.useState("");
   const [copied, setCopied] = React.useState(false);
+  const [liveSchedulerUrl, setLiveSchedulerUrl] = React.useState(config.schedulerUrl);
   const [showSplash, setShowSplash] = React.useState(false);
   const animationMs = config.animationMs ?? 420;
   const collectorEnabled = Boolean(config.collectorEnabled && config.collectorUrl);
@@ -458,6 +465,21 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
 
     window.localStorage.setItem(localeKey, locale);
   }, [locale, localeKey, config.enabled]);
+
+  React.useEffect(() => {
+    if (!collectorEnabled || !config.collectorUrl || !isBrowser) return;
+    const url = `${config.collectorUrl}?action=config`;
+    fetch(url, { mode: 'cors' })
+      .then(res => res.json())
+      .then(data => {
+        if (data?.ok && data?.config?.schedulerUrl) {
+          setLiveSchedulerUrl(data.config.schedulerUrl);
+        }
+      })
+      .catch(() => {
+        // silently keep fallback schedulerUrl from config
+      });
+  }, [collectorEnabled, config.collectorUrl]);
 
   React.useEffect(() => {
     if (!config.enabled) return;
@@ -670,10 +692,8 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
   const handleSendAndBook = () => {
     if (!isBrowser) return;
 
-    window.open(config.schedulerUrl, "_blank", "noopener,noreferrer");
-
-    const projectName = config.projectName ?? config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
+
     postToCollector({
       action: "lead",
       demoUrl: resolvedDemoUrl,
@@ -682,39 +702,9 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       q2: intake.q2,
       q3: intake.q3,
     });
-    const bodyLines = [
-      `Project: ${projectName}`,
-      `DemoId: ${config.demoId}`,
-      `Demo URL: ${resolvedDemoUrl}`,
-    ];
 
-    if (intake.currentWebsite.trim().length > 0) {
-      bodyLines.push(`Current website: ${intake.currentWebsite.trim()}`);
-    }
-
-    bodyLines.push(
-      `Q1: ${intake.q1 || "-"}`,
-      `Q2: ${intake.q2 || "-"}`,
-      `Q3: ${intake.q3 || "-"}`,
-      `Locale: ${locale}`,
-      `Time: ${new Date().toISOString()}`,
-    );
-
-    const subject = `[Demo: ${config.demoId}] Interested — Web intake`;
-    const body = bodyLines.join("\n");
-
-    const mailto = `mailto:${config.contactEmail}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailto;
-    setShowMailHelper(false);
-    if (mailHelperTimeoutRef.current) {
-      window.clearTimeout(mailHelperTimeoutRef.current);
-    }
-    mailHelperTimeoutRef.current = window.setTimeout(() => {
-      setShowMailHelper(true);
-    }, 700);
+    window.open(liveSchedulerUrl, "_blank", "noopener,noreferrer");
+    setStep("thanks");
   };
 
   const handleSkipAndBook = () => {
@@ -1020,6 +1010,21 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
                 </button>
               </div>
             </>
+          )}
+
+          {step === "thanks" && (
+            <div style={{ textAlign: "center", padding: "16px 0" }}>
+              <p className="phd-demo-body" style={{ marginBottom: "20px" }}>
+                {t("thanks")}
+              </p>
+              <button
+                type="button"
+                className="phd-demo-btn ghost"
+                onClick={() => startClose("post-submit")}
+              >
+                {t("closeToBar")}
+              </button>
+            </div>
           )}
         </div>
       </div>

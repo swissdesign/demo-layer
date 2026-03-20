@@ -166,6 +166,12 @@ var COPY = {
     en: "Submit",
     fr: "Envoyer",
     it: "Invia"
+  },
+  thanks: {
+    de: "Danke \u2014 ich melde mich in K\xFCrze bei Ihnen.",
+    en: "Thanks \u2014 I'll be in touch soon.",
+    fr: "Merci \u2014 je vous recontacte bient\xF4t.",
+    it: "Grazie \u2014 la ricontatto presto."
   }
 };
 var LOCALE_LABELS = {
@@ -294,6 +300,7 @@ var DemoLayer = ({ config }) => {
   const [phase, setPhase] = React.useState("closed");
   const [demoUrl, setDemoUrl] = React.useState("");
   const [copied, setCopied] = React.useState(false);
+  const [liveSchedulerUrl, setLiveSchedulerUrl] = React.useState(config.schedulerUrl);
   const [showSplash, setShowSplash] = React.useState(false);
   const animationMs = (_a = config.animationMs) != null ? _a : 420;
   const collectorEnabled = Boolean(config.collectorEnabled && config.collectorUrl);
@@ -442,6 +449,17 @@ var DemoLayer = ({ config }) => {
     if (!isBrowser) return;
     window.localStorage.setItem(localeKey, locale);
   }, [locale, localeKey, config.enabled]);
+  React.useEffect(() => {
+    if (!collectorEnabled || !config.collectorUrl || !isBrowser) return;
+    const url = `${config.collectorUrl}?action=config`;
+    fetch(url, { mode: "cors" }).then((res) => res.json()).then((data) => {
+      var _a2;
+      if ((data == null ? void 0 : data.ok) && ((_a2 = data == null ? void 0 : data.config) == null ? void 0 : _a2.schedulerUrl)) {
+        setLiveSchedulerUrl(data.config.schedulerUrl);
+      }
+    }).catch(() => {
+    });
+  }, [collectorEnabled, config.collectorUrl]);
   React.useEffect(() => {
     if (!config.enabled) return;
     if (!isBrowser) return;
@@ -629,10 +647,7 @@ var DemoLayer = ({ config }) => {
     setLocale(getSafeLocale(config, nextLocale));
   };
   const handleSendAndBook = () => {
-    var _a2;
     if (!isBrowser) return;
-    window.open(config.schedulerUrl, "_blank", "noopener,noreferrer");
-    const projectName = (_a2 = config.projectName) != null ? _a2 : config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
     postToCollector({
       action: "lead",
@@ -642,34 +657,8 @@ var DemoLayer = ({ config }) => {
       q2: intake.q2,
       q3: intake.q3
     });
-    const bodyLines = [
-      `Project: ${projectName}`,
-      `DemoId: ${config.demoId}`,
-      `Demo URL: ${resolvedDemoUrl}`
-    ];
-    if (intake.currentWebsite.trim().length > 0) {
-      bodyLines.push(`Current website: ${intake.currentWebsite.trim()}`);
-    }
-    bodyLines.push(
-      `Q1: ${intake.q1 || "-"}`,
-      `Q2: ${intake.q2 || "-"}`,
-      `Q3: ${intake.q3 || "-"}`,
-      `Locale: ${locale}`,
-      `Time: ${(/* @__PURE__ */ new Date()).toISOString()}`
-    );
-    const subject = `[Demo: ${config.demoId}] Interested \u2014 Web intake`;
-    const body = bodyLines.join("\n");
-    const mailto = `mailto:${config.contactEmail}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-    setShowMailHelper(false);
-    if (mailHelperTimeoutRef.current) {
-      window.clearTimeout(mailHelperTimeoutRef.current);
-    }
-    mailHelperTimeoutRef.current = window.setTimeout(() => {
-      setShowMailHelper(true);
-    }, 700);
+    window.open(liveSchedulerUrl, "_blank", "noopener,noreferrer");
+    setStep("thanks");
   };
   const handleSkipAndBook = () => {
     if (!isBrowser) return;
@@ -970,6 +959,18 @@ var DemoLayer = ({ config }) => {
                   }
                 )
               ] })
+            ] }),
+            step === "thanks" && /* @__PURE__ */ jsxs("div", { style: { textAlign: "center", padding: "16px 0" }, children: [
+              /* @__PURE__ */ jsx("p", { className: "phd-demo-body", style: { marginBottom: "20px" }, children: t("thanks") }),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  className: "phd-demo-btn ghost",
+                  onClick: () => startClose("post-submit"),
+                  children: t("closeToBar")
+                }
+              )
             ] })
           ] })
         ]

@@ -1,58 +1,8 @@
-export type DemoLayerConfig = {
-  enabled: boolean;
-  demoId: string;
-  projectName?: string;
-  currentWebsitePrefill?: string;
-  headerOffsetSelectors?: string[];
-  splashMs?: number;
-  splashEnabled?: boolean;
-  handleHeightPx?: number;
-  handleWidthPx?: number;
-  handleLineOpacity?: number;
-  animationMs?: number;
-  collectorEnabled?: boolean;
-  collectorUrl?: string;
-  collectorTrackEvents?: boolean;
-  studioName: string;
-  contactEmail: string;
-  schedulerUrl: string;
-  openDelayMs: number;
-  unlockAfterMs: number;
-  unlockOnScrollPx: number;
-  dismissTtlDays: number;
-  barHeightPx: number;
-  locales: readonly ['de', 'en', 'fr', 'it'];
-  defaultLocale: 'de' | 'en' | 'fr' | 'it';
-  theme: {
-    barBg: string;
-    accent: string;
-    panelBg: string;
-  };
-  reasons: Array<{
-    value: string;
-    labels: {
-      de: string;
-      en: string;
-      fr: string;
-      it: string;
-    };
-  }>;
-};
+import type { DemoLayerConfig } from "@pascalheiniger/demo-layer";
 
 export const demoLayerConfig: DemoLayerConfig = {
   enabled: true,
   demoId: 'aurora',
-  // If your sticky header uses different selectors, update this list.
-  headerOffsetSelectors: [
-    'header',
-    'nav',
-    '.navbar',
-    '.nav',
-    '.site-header',
-    '.header',
-    '#header',
-    '#navbar',
-  ],
   splashEnabled: true,
   splashMs: 900,
   handleHeightPx: 76,
@@ -70,11 +20,9 @@ export const demoLayerConfig: DemoLayerConfig = {
   unlockAfterMs: 12000,
   unlockOnScrollPx: 120,
   dismissTtlDays: 7,
-  barHeightPx: 44,
   locales: ['de', 'en', 'fr', 'it'] as const,
   defaultLocale: 'de',
   theme: {
-    barBg: '#000',
     accent: '#ff4da6',
     panelBg: '#0b0b0b',
   },
