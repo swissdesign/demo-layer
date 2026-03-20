@@ -721,7 +721,6 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
     );
     const reasonLabel = reason ? reason.labels[locale] : notInterestedReason;
 
-    const projectName = config.projectName ?? config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
     postToCollector({
       action: "feedback",
@@ -731,22 +730,6 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
       note: notInterestedNote,
     });
 
-    const subject = `[Demo: ${config.demoId}] Not interested`;
-    const body = [
-      `Project: ${projectName}`,
-      `DemoId: ${config.demoId}`,
-      `Demo URL: ${resolvedDemoUrl}`,
-      `Reason: ${notInterestedReason} (${reasonLabel})`,
-      `Context: ${notInterestedNote || "-"}`,
-      `Locale: ${locale}`,
-      `Time: ${new Date().toISOString()}`,
-    ].join("\n");
-
-    const mailto = `mailto:${config.contactEmail}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailto;
     startClose("not-interested");
   };
 

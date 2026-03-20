@@ -701,14 +701,12 @@ var DemoLayer = ({ config }) => {
     window.open(config.schedulerUrl, "_blank", "noopener,noreferrer");
   };
   const handleNotInterestedSubmit = () => {
-    var _a2;
     if (!isBrowser) return;
     if (!notInterestedReason) return;
     const reason = config.reasons.find(
       (item) => item.value === notInterestedReason
     );
     const reasonLabel = reason ? reason.labels[locale] : notInterestedReason;
-    const projectName = (_a2 = config.projectName) != null ? _a2 : config.demoId;
     const resolvedDemoUrl = demoUrl || window.location.href;
     postToCollector({
       action: "feedback",
@@ -717,20 +715,6 @@ var DemoLayer = ({ config }) => {
       reasonLabel,
       note: notInterestedNote
     });
-    const subject = `[Demo: ${config.demoId}] Not interested`;
-    const body = [
-      `Project: ${projectName}`,
-      `DemoId: ${config.demoId}`,
-      `Demo URL: ${resolvedDemoUrl}`,
-      `Reason: ${notInterestedReason} (${reasonLabel})`,
-      `Context: ${notInterestedNote || "-"}`,
-      `Locale: ${locale}`,
-      `Time: ${(/* @__PURE__ */ new Date()).toISOString()}`
-    ].join("\n");
-    const mailto = `mailto:${config.contactEmail}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
     startClose("not-interested");
   };
   if (!config.enabled) return null;
