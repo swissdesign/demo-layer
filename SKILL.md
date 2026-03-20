@@ -6,30 +6,36 @@ model_preference: GPT-OSS / Claude 4.6
 ---
 
 # INSTRUCTION
-Your task is to integrate the proprietary `@pascalheiniger/demo-layer` into the current application. You must follow these steps precisely based on the detected framework (Astro vs. Pure React). 
+Your task is to integrate `@pascalheiniger/demo-layer` into the current application. Follow these steps precisely. Do not modify any existing UI, routes, or business logic.
+
+---
 
 ## STEP 1: Add Dependency
-Modify `package.json`. Add the following to the `dependencies` object:
-`"@pascalheiniger/demo-layer": "github:swissdesign/demo-layer#v0.1.4"`
-Do not remove any existing dependencies. 
+
+In `package.json`, add to the `dependencies` object:
+```
+"@pascalheiniger/demo-layer": "github:swissdesign/demo-layer#v0.1.5"
+```
+Do not remove any existing dependencies.
+
+---
 
 ## STEP 2: Create the Configuration File
-Create a new file at `src/demoLayer.config.ts`. 
-For the `demoId` and `projectName`, extract the `name` field from `package.json`. If none exists, use "phd-demo".
-Use this exact template:
 
-\`\`\`typescript
+**Determine the demoId:** Read `package.json` `name` field. Strip any scope prefix (e.g. `@scope/`), replace spaces and slashes with hyphens, lowercase everything. Use this as `demoId` and `projectName`. If `name` is missing use `"phd-demo"`.
+
+**Create the file at `src/demoLayer.config.ts`** (always inside `src/`, never at the project root):
+```typescript
 import type { DemoLayerConfig } from "@pascalheiniger/demo-layer";
 
 export const demoLayerConfig = {
   enabled: true,
-  demoId: "YOUR_EXTRACTED_ID",
-  projectName: "YOUR_EXTRACTED_ID",
-  
-  // Collector & Analytics Setup
+  demoId: "REPLACE_WITH_EXTRACTED_ID",
+  projectName: "REPLACE_WITH_EXTRACTED_ID",
+
   collectorEnabled: true,
-  collectorUrl: import.meta.env.VITE_DEMO_COLLECTOR_URL || "",
-  collectorToken: import.meta.env.VITE_DEMO_COLLECTOR_TOKEN || "",
+  collectorUrl: "https://script.google.com/macros/s/AKfycbzzyq1Z-FFBUfFXTPNwy_XYNcio80UfZE_ioBGjZ7p5KcTywpjS3lYzrgJ-2j_A69x_/exec",
+  collectorToken: "REPLACE_WITH_COLLECTOR_TOKEN",
   collectorTrackEvents: true,
 
   splashEnabled: true,
@@ -56,32 +62,75 @@ export const demoLayerConfig = {
     { value: "other", labels: { de: "Anderes", en: "Other", fr: "Autre", it: "Altro" } },
   ],
 } satisfies DemoLayerConfig;
-\`\`\`
+```
 
-## STEP 3: Detect Framework & Inject
-Check the `package.json` dependencies to determine the framework.
+---
 
-### IF ASTRO (has `astro` in dependencies):
-1. Locate the main layout file (usually `src/layouts/Layout.astro`).
-2. Inside the frontmatter (the `---` block at the top), add:
-   `import { DemoLayer as PHDDemoLayer } from "@pascalheiniger/demo-layer";`
-   `import "@pascalheiniger/demo-layer/demoLayer.css";`
-   `import { demoLayerConfig } from "../demoLayer.config";`
-3. Inside the `<body>` tag (preferably at the very end, just before `</body>`), add the React Island:
-   `<PHDDemoLayer config={demoLayerConfig} client:only="react" />`
+## STEP 3: Detect Framework and Inject
 
-### IF PURE VITE/REACT (has `react` but NO `astro`):
-1. Locate the root component (usually `src/App.tsx` or `src/main.tsx`).
-2. Add imports at the top:
-   `import { DemoLayer as PHDDemoLayer } from "@pascalheiniger/demo-layer";`
-   `import "@pascalheiniger/demo-layer/demoLayer.css";`
-   `import { demoLayerConfig } from "./demoLayer.config";`
-3. Place `<PHDDemoLayer config={demoLayerConfig} />` as high in the component tree as possible (but not wrapping the app).
+Check `package.json` dependencies.
 
-## STEP 4: Terminal Execution
-Run `npm install` in the terminal to fetch the updated dependencies.
+### IF ASTRO (has `"astro"` in dependencies or devDependencies):
+
+1. Find the main layout file. Look for `src/layouts/Layout.astro` or `src/layouts/BaseLayout.astro`. If neither exists, find the `.astro` file most likely to be the root layout.
+
+2. In the frontmatter `---` block at the top, add these three imports:
+```
+import { DemoLayer as PHDDemoLayer } from "@pascalheiniger/demo-layer";
+import "@pascalheiniger/demo-layer/demoLayer.css";
+import { demoLayerConfig } from "../demoLayer.config";
+```
+Note: the import path `"../demoLayer.config"` is correct when the layout is inside `src/layouts/` and the config is at `src/demoLayer.config.ts`.
+
+3. Inside the `<body>` tag, just before `</body>`, add:
+```
+<PHDDemoLayer config={demoLayerConfig} client:only="react" />
+```
+
+### IF PURE VITE/REACT (has `"react"` but NO `"astro"`):
+
+1. Find the root component file. Check in this order: `src/App.tsx`, `src/App.jsx`, `src/main.tsx`, `src/main.jsx`. Use the first one that exists and contains JSX.
+
+2. Add these three imports at the top of that file:
+```typescript
+import { DemoLayer as PHDDemoLayer } from "@pascalheiniger/demo-layer";
+import "@pascalheiniger/demo-layer/demoLayer.css";
+import { demoLayerConfig } from "./demoLayer.config";
+```
+The import path `"./demoLayer.config"` is correct because both `App.tsx` and `demoLayer.config.ts` are inside `src/`.
+
+3. Place `<PHDDemoLayer config={demoLayerConfig} />` as a sibling inside the outermost JSX return — not wrapping the app, just alongside the existing content.
+
+---
+
+## STEP 4: Run npm install
+```
+npm install
+```
+
+This fetches the package from GitHub. Confirm it completes without errors.
+
+---
+
+## STEP 5: Verify Build
+
+Run:
+```
+npm run build
+```
+
+The build must pass with no errors. If it fails:
+- Check that `src/demoLayer.config.ts` exists
+- Check that the import path in App.tsx or the layout file exactly matches the relative path to `src/demoLayer.config.ts`
+- Check that `@pascalheiniger/demo-layer` is present in `node_modules` after npm install
+
+Do not proceed if the build fails.
+
+---
 
 ## CRITICAL RULES
-- Do NOT delete or modify existing UI components.
-- In Astro, you MUST use `client:only="react"` to ensure the overlay renders purely on the client side.
-- Your only job is injection. Act like a surgical tool.
+- The config file goes in `src/demoLayer.config.ts` — never in the project root
+- Import paths must reflect actual file locations — verify before writing
+- Do NOT modify any existing routes, components, or styles
+- In Astro, always use `client:only="react"` on the component
+- Run `npm run build` and confirm it passes before finishing
