@@ -14,7 +14,7 @@ Your task is to integrate `@pascalheiniger/demo-layer` into the current applicat
 
 In `package.json`, add to the `dependencies` object:
 ```
-"@pascalheiniger/demo-layer": "github:swissdesign/demo-layer#v0.1.5"
+"@pascalheiniger/demo-layer": "github:swissdesign/demo-layer#v0.1.6"
 ```
 Do not remove any existing dependencies.
 
