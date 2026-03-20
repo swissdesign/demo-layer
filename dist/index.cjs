@@ -755,6 +755,16 @@ var DemoLayer = ({ config }) => {
         role: "dialog",
         "aria-modal": "true",
         children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "phd-panel-close-btn",
+              "aria-label": "Close",
+              onClick: () => startClose("close-btn"),
+              children: "\xD7"
+            }
+          ),
           showSplash && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "phd-demo-splash", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "phd-demo-splash-inner", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PHDLogo, { className: "phd-logo phd-logo-splash" }) }) }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `phd-demo-content ${showSplash ? "is-splashing" : ""}`, children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "phd-demo-brand", children: [

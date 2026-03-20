@@ -771,6 +771,14 @@ export const DemoLayer: React.FC<Props> = ({ config }) => {
         role="dialog"
         aria-modal="true"
       >
+        <button
+          type="button"
+          className="phd-panel-close-btn"
+          aria-label="Close"
+          onClick={() => startClose("close-btn")}
+        >
+          ×
+        </button>
         {showSplash && (
           <div className="phd-demo-splash" aria-hidden="true">
             <div className="phd-demo-splash-inner">

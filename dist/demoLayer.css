@@ -128,6 +128,9 @@
   transform: translate(-50%, -50%) translateX(-28px) scale(0.9);
   transform-origin: left center;
   width: min(720px, calc(100vw - 32px));
+  max-height: 90dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--phd-panel-bg);
   border: 1px solid var(--phd-border);
   border-radius: 20px;
@@ -137,7 +140,6 @@
   opacity: 0;
   transition: opacity var(--phd-animation-ms, 420ms) cubic-bezier(0.22, 1, 0.36, 1),
     transform var(--phd-animation-ms, 420ms) cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
   pointer-events: auto;
 }
 
@@ -152,6 +154,33 @@
   opacity: 0;
   transform: translate(-50%, -50%) translateX(-28px) scale(0.9);
   pointer-events: none;
+}
+
+.phd-panel-close-btn {
+  position: sticky;
+  top: 0;
+  float: right;
+  margin: -8px -8px 8px 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--phd-border);
+  border-radius: 8px;
+  color: var(--phd-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+}
+
+.phd-panel-close-btn:hover {
+  border-color: rgba(255, 77, 166, 0.6);
+  color: var(--phd-text);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .phd-demo-content {
@@ -420,7 +449,28 @@
 
 @media (max-width: 520px) {
   .phd-panel {
-    padding: 22px 20px 20px;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
+    transform-origin: bottom center;
+    width: 100%;
+    max-height: 90dvh;
+    border-radius: 20px 20px 0 0;
+    padding: 22px 20px 28px;
+  }
+
+  .phd-panel[data-phase='open'],
+  .phd-panel[data-phase='opening'] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .phd-panel[data-phase='closing'],
+  .phd-panel[data-phase='closed'] {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
   }
 
   .phd-demo-actions {
@@ -432,8 +482,8 @@
   }
 
   .phd-handle {
-    width: 32px;
-    height: 64px;
+    width: 40px;
+    height: 80px;
   }
 
   .phd-handle__logo {
